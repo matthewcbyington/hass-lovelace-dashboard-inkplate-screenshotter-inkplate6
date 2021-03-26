@@ -4,8 +4,13 @@ FROM ${BUILD_FROM}
 
 WORKDIR /app
 
+# hadolint ignore=DL3018
 RUN apk add --no-cache \
-    chromium=86.0.4240.111-r0 \
+    chromium \
+    --repository=https://mirror.fsmg.org.nz/alpine/v3.9/community \
+    --repository=https://mirror.fsmg.org.nz/alpine/v3.9/main
+
+RUN apk add --no-cache \
     nss=3.60.1-r0 \
     freetype=2.10.4-r1 \
     freetype-dev=2.10.4-r1 \
