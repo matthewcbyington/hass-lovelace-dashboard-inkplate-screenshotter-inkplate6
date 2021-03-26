@@ -17,4 +17,4 @@ LANGUAGE=$(bashio::config 'language')
 ROTATION=$(bashio::config 'rotation')
 SCALING=$(bashio::config 'scaling')
 
-exec /usr/bin/npm start
+exec cd /app && /usr/bin/npm start
