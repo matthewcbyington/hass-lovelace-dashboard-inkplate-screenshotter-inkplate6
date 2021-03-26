@@ -1,0 +1,20 @@
+#!/usr/bin/with-contenv bashio
+# ==============================================================================
+# Runs the node server
+# ==============================================================================
+bashio::log.info "Starting Node server..."
+
+HA_BASE_URL=$(bashio::config 'ha_base_url')
+HA_SCREENSHOT_URL=$(bashio::config 'ha_screenshot_url')
+HA_ACCESS_TOKEN=$(bashio::config 'ha_access_token')
+CRON_JOB=$(bashio::config 'cron_job')
+RENDERING_TIMEOUT=$(bashio::config 'rendering_timeout')
+RENDERING_DELAY=$(bashio::config 'rendering_delay')
+RENDERING_SCREEN_HEIGHT=$(bashio::config 'rendering_screen_height')
+RENDERING_SCREEN_WIDTH=$(bashio::config 'rendering_screen_width')
+GRAYSCALE_DEPTH=$(bashio::config 'grayscale_depth')
+LANGUAGE=$(bashio::config 'language')
+ROTATION=$(bashio::config 'rotation')
+SCALING=$(bashio::config 'scaling')
+
+exec /usr/bin/npm start
