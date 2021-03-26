@@ -7,7 +7,7 @@
     "webui": "http://[HOST]:[PORT:5000]/output/cover.png",
     "image": "sibbl/addon-lovelace-kindle-screensaver-{arch}",
     "startup": "application",
-    "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+    "arch": ["armv7", "aarch64", "amd64"],
     "map": [
       "media:rw",
       "config:rw",
