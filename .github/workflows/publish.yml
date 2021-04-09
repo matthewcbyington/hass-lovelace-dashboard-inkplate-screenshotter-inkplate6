@@ -64,7 +64,7 @@ jobs:
         if: github.event_name != 'pull_request'
         run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --aarch64 --release-tag --docker-user marciogranzotto --docker-password ${{ secrets.DOCKER_PASSWORD }}
   update-main-repo:
-    needs: [build-amd64, build-armv7, build-aarch64, build-i386, build-armhf]
+    needs: [build-amd64, build-armv7, build-aarch64]
     name: Update addons repository
     runs-on: ubuntu-latest
     container:
