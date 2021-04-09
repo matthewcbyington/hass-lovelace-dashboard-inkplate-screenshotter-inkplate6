@@ -11,15 +11,15 @@ RUN apk add --no-cache \
     --repository=https://mirror.fsmg.org.nz/alpine/v3.9/main
 
 RUN apk add --no-cache \
-    nss=3.60.1-r0 \
+    nss=3.63-r0 \
     freetype=2.10.4-r1 \
     freetype-dev=2.10.4-r1 \
     harfbuzz=2.7.4-r1 \
     ca-certificates=20191127-r5 \
     ttf-freefont=20120503-r1 \
     imagemagick=7.0.10.57-r0 \
-    nodejs=14.16.0-r0 \
-    npm=14.16.0-r0
+    nodejs=14.16.1-r0 \
+    npm=14.16.1-r0
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
@@ -44,12 +44,12 @@ LABEL \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
     maintainer="Marcio Granzotto <contato@automarcio.com.br>" \
-    org.opencontainers.image.title="Transmission" \
+    org.opencontainers.image.title="Lovelace Kindle Screensaver" \
     org.opencontainers.image.description="Display a lovelace page as a screensaver on a jailbroken Kindle" \
     org.opencontainers.image.vendor="Marcio Granzotto" \
     org.opencontainers.image.authors="Marcio Granzotto <contato@automarcio.com.br>" \
-    org.opencontainers.image.source="https://github.com/sibbl/hass-lovelace-kindle-screensaver" \
-    org.opencontainers.image.documentation="https://github.com/sibbl/hass-lovelace-kindle-screensaver/blob/master/README.md" \
+    org.opencontainers.image.source="https://github.com/marciogranzotto/hass-lovelace-kindle-screensaver" \
+    org.opencontainers.image.documentation="https://github.com/marciogranzotto/hass-lovelace-kindle-screensaver/blob/master/README.md" \
     org.opencontainers.image.created=${BUILD_DATE} \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}

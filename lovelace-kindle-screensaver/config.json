@@ -3,9 +3,9 @@
     "version": "1.0.0",
     "slug": "lovelace-kindle-screensaver",
     "description": "Display a lovelace page as a screensaver on a jailbroken Kindle",
-    "url": "https://github.com/sibbl/hass-lovelace-kindle-screensaver",
+    "url": "https://github.com/marciogranzotto/hass-lovelace-kindle-screensaver",
     "webui": "http://[HOST]:[PORT:5000]/output/cover.png",
-    "image": "sibbl/addon-lovelace-kindle-screensaver-{arch}",
+    "image": "marciogranzotto/addon-lovelace-kindle-screensaver-{arch}",
     "startup": "application",
     "arch": ["armv7", "aarch64", "amd64"],
     "map": [
@@ -24,11 +24,13 @@
     "privileged": [
       "SYS_ADMIN","DAC_READ_SEARCH"
     ],
+    "auth_api": true,
     "hassio_api": true,
     "hassio_role": "default",
-    "homeassistant_api": false,
+    "homeassistant_api": true,
     "host_network": false,
     "options": {
+      "ha_token": "!secret kindle_ha_token",
       "screenshot_path": "/lovelace?kiosk",
       "cron_job": "* * * * *",
       "rendering_timeout": 30000,
@@ -38,9 +40,11 @@
       "grayscale_depth": 8,
       "language": "en",
       "rotation": 0,
-      "scaling": 1
+      "scaling": 1,
+      "log_level": "info"
     },
     "schema": {
+      "ha_token": "str",
       "screenshot_path": "str",
       "cron_job": "str",
       "rendering_timeout": "int",
@@ -50,7 +54,8 @@
       "grayscale_depth": "int",
       "language": "str",
       "rotation": "int",
-      "scaling": "int"
+      "scaling": "int",
+      "log_level": "list(trace|debug|info|notice|warning|error|fatal)?"
     },
     "environment": {
       "LOG_FORMAT": "{LEVEL}: {MESSAGE}",
