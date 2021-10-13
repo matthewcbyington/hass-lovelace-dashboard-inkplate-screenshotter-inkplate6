@@ -4,9 +4,16 @@
 # ==============================================================================
 bashio::log.info "Starting Node server..."
 
-bashio::log.debug "$(bashio::api.supervisor GET '/core/api/discovery_info' true)"
+export CORE_INFO=$(bashio::api.supervisor GET '/core/info' true)
+export HA_BASE_IP=$(bashio::jq "$CORE_INFO" ".data.ip_address")
+export HA_BASE_PORT=$(bashio::jq "$CORE_INFO" ".data.port")
+if [ $(bashio::jq "$CORE_INFO" ".data.ssl" "boolean")]; then
+    export HA_URL_PREFIX="https://"
+else
+export HA_URL_PREFIX="http://"
+fi
+export HA_BASE_URL="${HA_URL_PREFIX}${HA_BASE_IP}:${HA_BASE_PORT}"
 
-export HA_BASE_URL="$(bashio::jq "$(bashio::api.supervisor GET '/core/api/discovery_info' true)" ".base_url")"
 export HA_ACCESS_TOKEN="$(bashio::config 'ha_token')"
 export HA_SCREENSHOT_URL=$(bashio::config 'screenshot_path')
 export CRON_JOB=$(bashio::config 'cron_job')

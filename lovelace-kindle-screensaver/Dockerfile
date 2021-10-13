@@ -11,15 +11,15 @@ RUN apk add --no-cache \
     --repository=https://mirror.fsmg.org.nz/alpine/v3.9/main
 
 RUN apk add --no-cache \
-    nss=3.63-r0 \
-    freetype=2.10.4-r1 \
-    freetype-dev=2.10.4-r1 \
-    harfbuzz=2.7.4-r1 \
-    ca-certificates=20191127-r5 \
-    ttf-freefont=20120503-r1 \
-    imagemagick=7.0.10.57-r0 \
-    nodejs=14.16.1-r0 \
-    npm=14.16.1-r0
+    nss\
+    freetype\
+    freetype-dev\
+    harfbuzz\
+    ca-certificates\
+    ttf-freefont\
+    imagemagick\
+    nodejs\
+    npm
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
     PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
