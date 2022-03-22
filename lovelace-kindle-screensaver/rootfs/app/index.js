@@ -1,20 +1,28 @@
 const config = require("./config");
 const path = require("path");
 const http = require("http");
+const https = require("https");
 const { promises: fs } = require("fs");
 const fsExtra = require("fs-extra");
 const puppeteer = require("puppeteer");
 const { CronJob } = require("cron");
 const gm = require("gm");
 
-(async () => {
-  if (config.rotation % 90 > 0) {
-    console.error("Invalid rotation value: " + config.rotation);
-    return;
-  }
+// keep state of current battery level and whether the device is charging
+const batteryStore = {};
 
-  const outputDir = path.dirname(config.outputPath);
-  await fsExtra.ensureDir(outputDir);
+(async () => {
+  if (config.pages.length === 0) {
+    return console.error("Please check your configuration");
+  }
+  for (const i in config.pages) {
+    const pageConfig = config.pages[i];
+    if (pageConfig.rotation % 90 > 0) {
+      return console.error(
+        `Invalid rotation value for entry ${i + 1}: ${pageConfig.rotation}`
+      );
+    }
+  }
 
   console.log("Starting browser...");
   let browser = await puppeteer.launch({
@@ -22,22 +30,24 @@ const gm = require("gm");
       "--disable-dev-shm-usage",
       "--no-sandbox",
       `--lang=${config.language}`,
-    ],
-    headless: config.debug !== true,
+      config.ignoreCertificateErrors && "--ignore-certificate-errors"
+    ].filter((x) => x),
+    headless: config.debug !== true
   });
 
-  console.log("Adding authentication entry to browser's local storage...");
+  console.log(`Visiting '${config.baseUrl}' to login...`);
   let page = await browser.newPage();
   await page.goto(config.baseUrl, {
-    timeout: config.renderingTimeout,
+    timeout: config.renderingTimeout
   });
 
   const hassTokens = {
     hassUrl: config.baseUrl,
     access_token: config.accessToken,
-    token_type: "Bearer",
+    token_type: "Bearer"
   };
 
+  console.log("Adding authentication entry to browser's local storage...");
   await page.evaluate(
     (hassTokens, selectedLanguage) => {
       localStorage.setItem("hassTokens", hassTokens);
@@ -55,21 +65,83 @@ const gm = require("gm");
     );
     renderAndConvertAsync(browser);
   } else {
+    console.log("Starting first render...");
+    renderAndConvertAsync(browser);
     console.log("Starting rendering cronjob...");
     new CronJob({
       cronTime: config.cronJob,
       onTick: () => renderAndConvertAsync(browser),
-      start: true,
+      start: true
     });
   }
 
-  const httpServer = http.createServer(async (_, response) => {
+  const httpServer = http.createServer(async (request, response) => {
+    // Parse the request
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    // Check the page number
+    const pageNumberStr = url.pathname;
+    // and get the battery level, if any
+    // (see https://github.com/sibbl/hass-lovelace-kindle-screensaver/README.md for patch to generate it on Kindle)
+    const batteryLevel = parseInt(url.searchParams.get("batteryLevel"));
+    const isCharging = url.searchParams.get("isCharging");
+    const pageNumber =
+      pageNumberStr === "/" ? 1 : parseInt(pageNumberStr.substr(1));
+    if (
+      isFinite(pageNumber) === false ||
+      pageNumber > config.pages.length ||
+      pageNumber < 1
+    ) {
+      console.log(`Invalid request: ${request.url} for page ${pageNumber}`);
+      response.writeHead(400);
+      response.end("Invalid request");
+      return;
+    }
     try {
-      const data = await fs.readFile(config.outputPath);
-      console.log("Image was accessed");
-      response.setHeader("Content-Length", Buffer.byteLength(data));
-      response.writeHead(200, { "Content-Type": "image/png" });
+      // Log when the page was accessed
+      const n = new Date();
+      console.log(`${n.toISOString()}: Image ${pageNumber} was accessed`);
+
+      const pageIndex = pageNumber - 1;
+      const configPage = config.pages[pageIndex];
+
+      const data = await fs.readFile(configPage.outputPath);
+      const stat = await fs.stat(configPage.outputPath);
+
+      const lastModifiedTime = new Date(stat.mtime).toUTCString();
+
+      response.writeHead(200, {
+        "Content-Type": "image/png",
+        "Content-Length": Buffer.byteLength(data),
+        "Last-Modified": lastModifiedTime
+      });
       response.end(data);
+
+      let pageBatteryStore = batteryStore[pageIndex];
+      if (!pageBatteryStore) {
+        pageBatteryStore = batteryStore[pageIndex] = {
+          batteryLevel: null,
+          isCharging: false
+        };
+      }
+      if (!isNaN(batteryLevel) && batteryLevel >= 0 && batteryLevel <= 100) {
+        if (batteryLevel !== pageBatteryStore.batteryLevel) {
+          pageBatteryStore.batteryLevel = batteryLevel;
+          console.log(
+            `New battery level: ${batteryLevel} for page ${pageNumber}`
+          );
+        }
+
+        if (isCharging === "Yes" && pageBatteryStore.isCharging !== true) {
+          pageBatteryStore.isCharging = true;
+          console.log(`Battery started charging for page ${pageNumber}`);
+        } else if (
+          isCharging === "No" &&
+          pageBatteryStore.isCharging !== false
+        ) {
+          console.log(`Battery stopped charging for page ${pageNumber}`);
+          pageBatteryStore.isCharging = false;
+        }
+      }
     } catch (e) {
       console.error(e);
       response.writeHead(404);
@@ -84,63 +156,121 @@ const gm = require("gm");
 })();
 
 async function renderAndConvertAsync(browser) {
-  const url = `${config.baseUrl}${config.screenShotUrl}`;
+  for (let pageIndex = 0; pageIndex < config.pages.length; pageIndex++) {
+    const pageConfig = config.pages[pageIndex];
+    const pageBatteryStore = batteryStore[pageIndex];
 
-  const outputPath = config.outputPath;
-  const tempPath = outputPath + ".temp";
+    const url = `${config.baseUrl}${pageConfig.screenShotUrl}`;
 
-  console.log(`Rendering ${url} to image...`);
-  await renderUrlToImageAsync(browser, url, tempPath);
+    const outputPath = pageConfig.outputPath;
+    await fsExtra.ensureDir(path.dirname(outputPath));
 
-  console.log(`Converting rendered screenshot of ${url} to grayscale png...`);
-  await convertImageToKindleCompatiblePngAsync(tempPath, outputPath);
+    const tempPath = outputPath + ".temp";
 
-  fs.unlink(tempPath);
-  console.log(`Finished ${url}`);
+    console.log(`Rendering ${url} to image...`);
+    await renderUrlToImageAsync(browser, pageConfig, url, tempPath);
+
+    console.log(`Converting rendered screenshot of ${url} to grayscale png...`);
+    await convertImageToKindleCompatiblePngAsync(
+      pageConfig,
+      tempPath,
+      outputPath
+    );
+
+    fs.unlink(tempPath);
+    console.log(`Finished ${url}`);
+
+    if (
+      pageBatteryStore &&
+      pageBatteryStore.batteryLevel !== null &&
+      pageConfig.batteryWebHook
+    ) {
+      sendBatteryLevelToHomeAssistant(
+        pageIndex,
+        pageBatteryStore,
+        pageConfig.batteryWebHook
+      );
+    }
+  }
 }
 
-async function renderUrlToImageAsync(browser, url, path) {
+function sendBatteryLevelToHomeAssistant(
+  pageIndex,
+  batteryStore,
+  batteryWebHook
+) {
+  const batteryStatus = JSON.stringify(batteryStore);
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Content-Length": Buffer.byteLength(batteryStatus)
+    }
+  };
+  const url = `${config.baseUrl}/api/webhook/${batteryWebHook}`;
+  const httpLib = url.toLowerCase().startsWith("https") ? https : http;
+  const req = httpLib.request(url, options, (res) => {
+    if (res.statusCode !== 200) {
+      console.error(
+        `Update device ${pageIndex} at ${url} status ${res.statusCode}: ${res.statusMessage}`
+      );
+    }
+  });
+  req.on("error", (e) => {
+    console.error(`Update ${pageIndex} at ${url} error: ${e.message}`);
+  });
+  req.write(batteryStatus);
+  req.end();
+}
+
+async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
   try {
     page = await browser.newPage();
     await page.emulateMediaFeatures([
       {
         name: "prefers-color-scheme",
-        value: "light",
-      },
+        value: "light"
+      }
     ]);
 
     let size = {
-      width: Number(config.renderingScreenSize.width),
-      height: Number(config.renderingScreenSize.height)
+      width: Number(pageConfig.renderingScreenSize.width),
+      height: Number(pageConfig.renderingScreenSize.height)
     };
 
-    if (config.rotation % 180 > 0) {
+    if (pageConfig.rotation % 180 > 0) {
       size = {
         width: size.height,
-        height: size.width,
+        height: size.width
       };
     }
 
     await page.setViewport(size);
+    const startTime = new Date().valueOf();
     await page.goto(url, {
       waitUntil: ["domcontentloaded", "load", "networkidle0"],
-      timeout: config.renderingTimeout,
+      timeout: config.renderingTimeout
+    });
+
+    const navigateTimespan = new Date().valueOf() - startTime;
+    await page.waitForSelector("home-assistant", {
+      timeout: Math.max(config.renderingTimeout - navigateTimespan, 1000)
     });
 
     await page.addStyleTag({
       content: `
         body {
-          width: calc(${config.renderingScreenSize.width}px / ${config.scaling});
-          height: calc(${config.renderingScreenSize.height}px / ${config.scaling});
+          width: calc(${size.width}px / ${pageConfig.scaling});
+          height: calc(${size.height}px / ${pageConfig.scaling});
           transform-origin: 0 0;
-          transform: scale(${config.scaling});
+          transform: scale(${pageConfig.scaling});
           overflow: hidden;
-        }`,
+        }`
     });
 
-    if (config.renderingDelay > 0) {
-      await delay(config.renderingDelay);
+    if (pageConfig.renderingDelay > 0) {
+      await page.waitForTimeout(pageConfig.renderingDelay);
     }
     await page.screenshot({
       path,
@@ -148,8 +278,8 @@ async function renderUrlToImageAsync(browser, url, path) {
       clip: {
         x: 0,
         y: 0,
-        ...size,
-      },
+        ...size
+      }
     });
   } catch (e) {
     console.error("Failed to render", e);
@@ -160,15 +290,21 @@ async function renderUrlToImageAsync(browser, url, path) {
   }
 }
 
-function convertImageToKindleCompatiblePngAsync(inputPath, outputPath) {
+function convertImageToKindleCompatiblePngAsync(
+  pageConfig,
+  inputPath,
+  outputPath
+) {
   return new Promise((resolve, reject) => {
     gm(inputPath)
       .options({
-        imageMagick: config.useImageMagick === true,
+        imageMagick: config.useImageMagick === true
       })
-      .rotate("white", config.rotation)
-      .type("GrayScale")
-      .bitdepth(config.grayscaleDepth)
+      .dither(pageConfig.dither)
+      .rotate("white", pageConfig.rotation)
+      .type(pageConfig.colorMode)
+      .bitdepth(pageConfig.grayscaleDepth)
+      .quality(100)
       .write(outputPath, (err) => {
         if (err) {
           reject(err);
@@ -176,10 +312,5 @@ function convertImageToKindleCompatiblePngAsync(inputPath, outputPath) {
           resolve();
         }
       });
-  });
-}
-function delay(time) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, time);
   });
 }
