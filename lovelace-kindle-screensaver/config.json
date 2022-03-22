@@ -43,6 +43,7 @@
       "scaling": 1,
       "grayscale_depth": 8,
       "color_mode": "TrueColor",
+      "dither": false,
       "log_level": "info"
     },
     "schema": {
@@ -59,6 +60,7 @@
       "scaling": "int",
       "grayscale_depth": "int",
       "color_mode": "str",
+      "dither": "bool",
       "log_level": "list(trace|debug|info|notice|warning|error|fatal)?"
     },
     "environment": {
