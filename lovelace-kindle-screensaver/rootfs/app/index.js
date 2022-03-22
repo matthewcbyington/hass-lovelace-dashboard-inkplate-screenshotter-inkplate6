@@ -170,7 +170,7 @@ async function renderAndConvertAsync(browser) {
     console.log(`Rendering ${url} to image...`);
     await renderUrlToImageAsync(browser, pageConfig, url, tempPath);
 
-    console.log(`Converting rendered screenshot of ${url} to grayscale png...`);
+    console.log(`Converting rendered screenshot of ${url} to requested parameters png...`);
     await convertImageToKindleCompatiblePngAsync(
       pageConfig,
       tempPath,
@@ -227,12 +227,12 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
   try {
     page = await browser.newPage();
-    await page.emulateMediaFeatures([
-      {
-        name: "prefers-color-scheme",
-        value: "light"
-      }
-    ]);
+    // await page.emulateMediaFeatures([
+    //   {
+    //     name: 'prefers-color-scheme',
+    //     value: 'light'
+    //   }
+    // ]);
 
     let size = {
       width: Number(pageConfig.renderingScreenSize.width),
