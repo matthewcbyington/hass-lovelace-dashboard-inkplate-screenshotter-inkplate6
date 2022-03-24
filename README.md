@@ -1,92 +1,54 @@
 # Changes
 
-This is fork of https://github.com/marciogranzotto/hass-lovelace-kindle-screensaver (because it is
-the original repository transfered to hassio add-on), which is additionally merged with https://github.com/itobey/hass-lovelace-screenshotter (becuase it contains changes to inkplate 10). Thanks to both authors for their amazing work!
+This is fork of https://github.com/marciogranzotto/hass-lovelace-kindle-screensaver (original repository transfered to hassio add-on) merged with https://github.com/itobey/hass-lovelace-screenshotter (becuase it contains changes to inkplate 10). Thanks to both authors for their amazing work!
 
 ---
 
-# Home Assistant Lovelace Kindle Screensaver
+# Home Assistant Lovelace dashboard renderer
 
-![ci](https://github.com/sibbl/hass-lovelace-kindle-screensaver/workflows/ci/badge.svg)
+![ci](https://github.com/mkocus/hass-lovelace-kindle-screensaver/actions/workflows/publish.yml/badge.svg)
 
-This tool can be used to display a Lovelace view of your Home Assistant instance on a [jailbroken](https://www.mobileread.com/forums/showthread.php?t=320564) Kindle device. It regularly takes a screenshot which can be polled and used as a screensaver image of the [online screensaver plugin](https://www.mobileread.com/forums/showthread.php?t=236104).
-
-If you're looking for a way to render your own HTML, see my other project [hass-kindle-screensaver](https://github.com/sibbl/hass-kindle-screensaver) which renders a React page and can be adapted to your specific needs.
+This tool can be used as Home Assistant addon to display a Lovelace view of your Home Assistant instance as an image. So it can be displayed on the eink panel or any screen connected to the network. It regularly takes a screenshot which can be polled.
 
 ## Sample image
 
-![Sample image](https://raw.githubusercontent.com/sibbl/hass-lovelace-kindle-screensaver/main/assets/sample.png)
+![Sample image](https://raw.githubusercontent.com/mkocus/hass-lovelace-kindle-screensaver/main/assets/sample.png)
 
 ## Features
 
-This tool regularly takes a screenshot of a specific page of your home assistant setup. It converts it into the PNG grayscale format which Kindles can display.
-
-Using my [own Kindle 4 setup guide](https://github.com/sibbl/hass-lovelace-kindle-4) or the [online screensaver extension](https://www.mobileread.com/forums/showthread.php?t=236104) for any jailbroken Kindle, this image can be regularly polled from your device so you can use it as a weather station, a display for next public transport departures etc.
+This tool regularly takes a screenshot of a specific page of your home assistant setup. It converts it into the PNG with various options (color or grayscale).
 
 ## Usage
 
-You may simple set up the [sibbl/hass-lovelace-kindle-screensaver](https://hub.docker.com/r/sibbl/hass-lovelace-kindle-screensaver) docker container. The container exposes a single port (5000 by default).
+Go to the Home Assistant options, addons, addon store, then using upper right menu add this as an repository. Then you should be able to install the addon using the install button on this page.
+
+After instaling go to the addon config and (minimally) setup two options:
+- ha_base_url - base url of your home assistant instance (http://192.168.0.2:8123 for example)
+- ha_access_token - go to your user profile and the bottom you will have an option to generate access token. Paste it there.
 
 You can access the image by doing a simple GET request to e.g. `http://localhost:5000/` to receive the most recent image.
 
-Home Assistant related stuff:
+All options are the same as original addon and are listed below:
 
 | Env Var                   | Sample value                          | Required | Array?\* | Description                                                                                                                                             |
 | ------------------------- | ------------------------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `HA_BASE_URL`             | `https://your-hass-instance.com:8123` | yes      | no       | Base URL of your home assistant instance                                                                                                                |
-| `HA_SCREENSHOT_URL`       | `/lovelace/screensaver?kiosk`         | yes      | yes      | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
-| `HA_ACCESS_TOKEN`         | `eyJ0...`                             | yes      | no       | Long-lived access token from Home Assistant, see [official docs](https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token)           |
-| `HA_BATTERY_WEBHOOK`      | `set_kindle_battery_level`            | no       | yes      | Webhook definied in HA which receives `batteryLevel` (number between 0-100) and `isCharging` (boolean) as JSON                                          |
-| `LANGUAGE`                | `en`                                  | no       | no       | Language to set in browser and home assistant                                                                                                           |
-| `CRON_JOB`                | `* * * * *`                           | no       | no       | How often to take screenshot                                                                                                                            |
-| `RENDERING_TIMEOUT`       | `10000`                               | no       | no       | Timeout of render process, helpful if your HASS instance might be down                                                                                  |
-| `RENDERING_DELAY`         | `0`                                   | no       | yes      | how long to wait between navigating to the page and taking the screenshot, in milliseconds                                                              |
-| `RENDERING_SCREEN_HEIGHT` | `800`                                 | no       | yes      | Height of your kindle screen resolution                                                                                                                 |
-| `RENDERING_SCREEN_WIDTH`  | `600`                                 | no       | yes      | Width of your kindle screen resolution                                                                                                                  |
-| `ROTATION`                | `0`                                   | no       | yes      | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
-| `SCALING`                 | `1`                                   | no       | yes      | Scaling factor, e.g. `1.5` to zoom in or `0.75` to zoom out                                                                                             |
-| `GRAYSCALE_DEPTH`         | `8`                                   | no       | yes      | Ggrayscale bit depth your kindle supports                                                                                                               |
-| `COLOR_MODE`              | `GrayScale`                           | no       | yes      | ColorMode to use, ex: `GrayScale`, or `TrueColor`.                                                                                                      |
-| `DITHER`                  | `false`                               | no       | yes      | Apply a dither to the images.                                                                                                                           |
+| `ha_base_ulr`             | `https://your-hass-instance.com:8123` | yes      | no       | Base URL of your home assistant instance                                                                                                                |
+| `ha_screenshot_url`       | `/lovelace?kiosk`                     | no      | yes      | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
+| `ha_access_token`         | `eyJ0...`                             | yes      | no       | Long-lived access token from Home Assistant, see [official docs](https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token)           |                                    |
+| `language`                | `en`                                  | no       | no       | Language to set in browser and home assistant                                                                                                           |
+| `cron_job`                | `* * * * *`                           | no       | no       | How often to take screenshot                                                                                                                            |
+| `rendering_timeout`       | `10000`                               | no       | no       | Timeout of render process, helpful if your HASS instance might be down                                                                                  |
+| `rendering_delay`         | `0`                                   | no       | yes      | how long to wait between navigating to the page and taking the screenshot, in milliseconds                                                              |
+| `rendering_screen_width` | `800`                                 | no       | yes      | Height of your kindle screen resolution                                                                                                                 |
+| `rendering_screen_width`  | `600`                                 | no       | yes      | Width of your kindle screen resolution                                                                                                                  |
+| `rotation`                | `0`                                   | no       | yes      | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
+| `scaling`                 | `1`                                   | no       | yes      | Scaling factor, e.g. `1.5` to zoom in or `0.75` to zoom out                                                                                             |
+| `grayscale_depth`         | `8`                                   | no       | yes      | Ggrayscale bit depth your kindle supports                                                                                                               |
+| `color_mode`              | `GrayScale`                           | no       | yes      | ColorMode to use, ex: `GrayScale`, or `TrueColor`.                                                                                                      |
+| `diter`                  | `false`                               | no       | yes      | Apply a dither to the images.                                                                                                                           |
 
-**\* Array** means that you can set `HA_SCREENSHOT_URL_2`, `HA_SCREENSHOT_URL_3`, ... `HA_SCREENSHOT_URL_n` to render multiple pages within the same instance.
-If you use `HA_SCREENSHOT_URL_2`, you can also set `ROTATION_2=180`. If there is no `ROTATION_n` set, then `ROTATION` will be used as a fallback.
-You can access these additional images by making GET Requests `http://localhost:5000/2`, `http://localhost:5000/3` etc.
-
-You may also simply use the `docker-compose.yml` file inside this repository, configure everything in there and run `docker-compose up`.
-
-### How to set up the webhook
-
-The webhook setting is to let HA keep track of the battery level of the Kindle, so it can warn you about charging it. You need to do the following:
-
-1. See below for a patch needed to make the Kindle Online Screensaver plugin send the battery level to this application.
-1. Create two new helper entities in Home Assistant:
-   1. a new `input_number` entity, e.g. `input_number.kindle_battery_level`
-   1. a new `input_boolean` entity, e.g. `input_boolean.kindle_battery_charging`
-1. Add an automation to set the values of these entities using a webhook: [![import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fsibbl%2Fhass-lovelace-kindle-screensaver%2Fblob%2Fmain%2Fbattery_sensor_blueprint.yaml)
-1. Define this application's environment variable `HA_BATTERY_WEBHOOK` to the name of the webhook defined in the previous step. For multiple devices, `HA_BATTERY_WEBHOOK_2`, ... `HA_BATTERY_WEBHOOK_n` is supported as well.
-
-#### Patch for Kinde Online Screensaver
-
-Modify the following lines in the Kindle Online Screensaver plugin's `bin/update.sh` (absolute path on device should be `/mnt/us/extensions/onlinescreensaver/bin/update.sh`):
-
-```diff
-...
-if [ 1 -eq $CONNECTED ]; then
--     if wget -q $IMAGE_URI -O $TMPFILE; then
-+     batteryLevel=`/usr/bin/powerd_test -s | awk -F: '/Battery Level/ {print substr($2, 0, length($2)-1) - 0}'`
-+     isCharging=`/usr/bin/powerd_test -s | awk -F: '/Charging/ {print substr($2,2,length($2))}'`
-+     if wget -q "$IMAGE_URI?batteryLevel=$batteryLevel&isCharging=$isCharging" -O $TMPFILE; then
-        mv $TMPFILE $SCREENSAVERFILE
-        logger "Screen saver image updated"
-...
-```
+**\* Array** mode of original addon are **not currently supported**.
 
 ### Advanced configuration
 
-Some advanced variables for local usage which shouldn't be necessary when using Docker:
-
-- `OUTPUT_PATH=./output.png` (destination of rendered image. `OUTPUT_2`, `OUTPUT_3`, ... is also supported)
-- `PORT=5000` (port of server, which returns the last image)
-- `USE_IMAGE_MAGICK=false` (use ImageMagick instead of GraphicsMagick)
-- `UNSAFE_IGNORE_CERTIFICATE_ERRORS=true` (ignore certificate errors of e.g. self-signed certificates at your own risk)
+You can change the port used by the addon using the configuration screen.

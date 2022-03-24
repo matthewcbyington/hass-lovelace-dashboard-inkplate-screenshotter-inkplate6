@@ -1,10 +1,10 @@
 {
-    "name": "Lovelace Kindle Screensaver",
-    "version": "1.1.5",
-    "slug": "lovelace-kindle-screensaver",
-    "description": "Display a lovelace page as a screensaver on a jailbroken Kindle",
+    "name": "Lovelace dashboard renderer",
+    "version": "1.1.6",
+    "slug": "lovelace-dashboard-renderer",
+    "description": "Renders any lovelace dashboard to image and hosts it",
     "url": "https://github.com/mkocus/hass-lovelace-kindle-screensaver/tree/master/lovelace-kindle-screensaver",
-    "webui": "http://[HOST]:[PORT:5000]/output/cover.png",
+    "webui": "http://[HOST]:[PORT:5000]",
     "image": "mkocus/addon-lovelace-kindle-screensaver-{arch}",
     "startup": "application",
     "arch": ["armv7", "aarch64", "amd64"],
@@ -19,7 +19,7 @@
       "5000/tcp": 5000
     },
     "ports_description": {
-      "5000/tcp": "Webserver that hosts the screensaver image"
+      "5000/tcp": "Webserver that hosts the lovelace screenshot image"
     },
     "privileged": [
       "SYS_ADMIN","DAC_READ_SEARCH"
@@ -30,9 +30,9 @@
     "homeassistant_api": true,
     "host_network": false,
     "options": {
-      "ha_base_url": "!secret screenshoter_ha_base_url",
+      "ha_base_url": "",
       "ha_screenshot_url": "/lovelace?kiosk",
-      "ha_access_token": "!secret screenshoter_ha_token",
+      "ha_access_token": "",
       "language": "en",
       "cron_job": "*/20 * * * *",
       "rendering_timeout": 30000,
