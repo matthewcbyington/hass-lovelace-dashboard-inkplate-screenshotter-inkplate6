@@ -249,9 +249,11 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
     await page.setViewport(size);
     const startTime = new Date().valueOf();
     await page.goto(url, {
-      waitUntil: ["domcontentloaded", "load", "networkidle0"],
+      waitUntil: ["domcontentloaded", "load", "networkidle2"],
       timeout: config.renderingTimeout
     });
+
+    console.log("Navigated");
 
     const navigateTimespan = new Date().valueOf() - startTime;
     await page.waitForSelector("home-assistant", {
