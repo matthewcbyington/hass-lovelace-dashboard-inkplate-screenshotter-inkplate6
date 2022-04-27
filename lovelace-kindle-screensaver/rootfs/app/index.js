@@ -253,12 +253,14 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
       timeout: config.renderingTimeout
     });
 
-    console.log("Navigated");
+    console.log("Goto completed");
 
     const navigateTimespan = new Date().valueOf() - startTime;
     await page.waitForSelector("home-assistant", {
       timeout: Math.max(config.renderingTimeout - navigateTimespan, 1000)
     });
+
+    console.log("Wait for selector completed");
 
     await page.addStyleTag({
       content: `
@@ -271,9 +273,12 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
         }`
     });
 
+    console.log("Added style tag");
+
     if (pageConfig.renderingDelay > 0) {
       await page.waitForTimeout(pageConfig.renderingDelay);
     }
+    console.log("Wait for timeout completed");
     await page.screenshot({
       path,
       type: "png",
@@ -283,6 +288,7 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
         ...size
       }
     });
+    console.log("Screenshot completed");
   } catch (e) {
     console.error("Failed to render", e);
   } finally {
