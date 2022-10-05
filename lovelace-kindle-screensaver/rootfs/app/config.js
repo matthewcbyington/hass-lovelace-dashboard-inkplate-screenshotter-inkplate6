@@ -43,6 +43,7 @@ module.exports = {
   pages: getPagesConfig(),
   port: process.env.PORT || 5000,
   renderingTimeout: process.env.RENDERING_TIMEOUT || 10000,
+  imageFormat: process.env.IMAGE_FORMAT || "png",
   language: process.env.LANGUAGE || "en",
   debug: process.env.DEBUG === "true",
   ignoreCertificateErrors:
