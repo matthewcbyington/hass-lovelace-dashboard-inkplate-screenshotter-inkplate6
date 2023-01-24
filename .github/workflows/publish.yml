@@ -23,7 +23,7 @@ jobs:
             = /version => "${{ env.VERSION }}"
       - name: publish amd64 docker files
         if: github.event_name != 'pull_request'
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --amd64 --release-tag --docker-user mkocus --docker-password ${{ secrets.DOCKER_PASSWORD }}
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --amd64 --release-tag --docker-user masterwendu --docker-password ${{ secrets.DOCKER_PASSWORD }}
   build-armv7:
     name: Build and publish armv7 image
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
             = /version => "${{ env.VERSION }}"
       - name: publish armv7 docker files
         if: github.event_name != 'pull_request'
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --armv7 --release-tag --docker-user mkocus --docker-password ${{ secrets.DOCKER_PASSWORD }}
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --armv7 --release-tag --docker-user masterwendu --docker-password ${{ secrets.DOCKER_PASSWORD }}
   build-aarch64:
     name: Build and publish aarch64 image
     runs-on: ubuntu-latest
@@ -62,13 +62,4 @@ jobs:
 
       - name: publish aarch64 docker files
         if: github.event_name != 'pull_request'
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --aarch64 --release-tag --docker-user mkocus --docker-password ${{ secrets.DOCKER_PASSWORD }}
-  # update-main-repo:
-  #   needs: [build-amd64, build-armv7, build-aarch64]
-  #   name: Update addons repository
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: hassioaddons/repository-updater:latest
-  #   steps:
-  #     - name: upload
-  #       run: repository-updater --token ${{ secrets.GIT_TOKEN }} --repository mkocus/addons-repository --addon lovelace-kindle-screensaver
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder	-t lovelace-kindle-screensaver --aarch64 --release-tag --docker-user masterwendu --docker-password ${{ secrets.DOCKER_PASSWORD }}
