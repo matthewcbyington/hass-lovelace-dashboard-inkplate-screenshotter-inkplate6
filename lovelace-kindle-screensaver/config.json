@@ -59,7 +59,7 @@
       "rendering_screen_width": "int",
       "image_format": "str",
       "rotation": "int",
-      "scaling": "int",
+      "scaling": "float",
       "grayscale_depth": "int",
       "color_mode": "str",
       "dither": "bool",
