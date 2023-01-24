@@ -1,6 +1,6 @@
 {
     "name": "Lovelace dashboard renderer",
-    "version": "1.1.10",
+    "version": "1.1.11",
     "slug": "lovelace-dashboard-renderer",
     "description": "Renders any lovelace dashboard to image and hosts it",
     "url": "https://github.com/mkocus/hass-lovelace-kindle-screensaver/tree/master/lovelace-kindle-screensaver",
