@@ -10,6 +10,8 @@ RUN apk add --no-cache \
     --repository=https://mirror.fsmg.org.nz/alpine/v3.9/community \
     --repository=https://mirror.fsmg.org.nz/alpine/v3.9/main
 
+RUN apk add font-noto-emoji
+
 RUN apk add --no-cache \
     nss\
     freetype\
