@@ -40,18 +40,18 @@ ARG BUILD_VERSION
 
 # Labels
 LABEL \
-    io.hass.name="Lovelace Kindle Screensaver" \
-    io.hass.description="Display a lovelace page as a screensaver on a jailbroken Kindle" \
+    io.hass.name="Lovelace Inkplate Screensaver" \
+    io.hass.description="Display a lovelace page on an InkplateColor (Inkplate 6 Color)" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
     maintainer="Marcin Kocon <mkocon@gmail.com>" \
-    org.opencontainers.image.title="Lovelace Kindle Screensaver" \
-    org.opencontainers.image.description="Display a lovelace page as a screensaver on a jailbroken Kindle" \
-    org.opencontainers.image.vendor="Marcin Kocon" \
-    org.opencontainers.image.authors="Marcin Kocon <mkocon@gmail.com>" \
-    org.opencontainers.image.source="https://github.com/mkocus/hass-lovelace-kindle-screensaver" \
-    org.opencontainers.image.documentation="https://github.com/mkocus/hass-lovelace-kindle-screensaver/blob/master/README.md" \
+    org.opencontainers.image.title="Lovelace Inkplate Screensaver" \
+    org.opencontainers.image.description="Display a lovelace page on a InkplateColor" \
+    org.opencontainers.image.vendor="Brody Kenrick" \
+    org.opencontainers.image.authors="Brody Kenrick <BrodyKenrick@gmail.com>" \
+    org.opencontainers.image.source="https://github.com/brodykenrick/hass-lovelace-screenshotter" \
+    org.opencontainers.image.documentation="https://github.com/brodykenrick/hass-lovelace-screenshotter/blob/master/README.md" \
     org.opencontainers.image.created=${BUILD_DATE} \
     org.opencontainers.image.revision=${BUILD_REF} \
     org.opencontainers.image.version=${BUILD_VERSION}
