@@ -41,7 +41,7 @@ module.exports = {
   cronJob: process.env.CRON_JOB || "* * * * *",
   useImageMagick: process.env.USE_IMAGE_MAGICK === "true",
   pages: getPagesConfig(),
-  port: process.env.PORT || 5000,
+  port: process.env.PORT || 5006,
   renderingTimeout: process.env.RENDERING_TIMEOUT || 10000,
   imageFormat: process.env.IMAGE_FORMAT || "png",
   language: process.env.LANGUAGE || "en",

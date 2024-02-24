@@ -9,6 +9,7 @@ const { CronJob } = require("cron");
 const gm = require("gm");
 
 // keep state of current battery level and whether the device is charging
+//TODO: remove me
 const batteryStore = {};
 
 (async () => {
@@ -149,7 +150,7 @@ const batteryStore = {};
     }
   });
 
-  const port = config.port || 5000;
+  const port = config.port || 5006;
   httpServer.listen(port, () => {
     console.log(`Server is running at ${port}`);
   });
