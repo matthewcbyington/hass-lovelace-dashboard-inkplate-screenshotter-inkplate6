@@ -5,3 +5,7 @@ docker-compose.*.yml
 cover.png
 output/
 .devcontainer/devcontainer.env
+cover.jpg
+cover.bmp
+output/
+.DS_Store

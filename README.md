@@ -4,7 +4,7 @@ This is fork to target this screenshotter for rendering to an Inkplate6color
 
 ---
 
-# Home Assistant Lovelace dashboard renderer for Imkplate6color
+# Home Assistant Lovelace dashboard renderer for Inkplate6color
 
 ![ci](https://github.com/brodykenrick/hass-lovelace-kindle-screensaver/actions/workflows/publish.yml/badge.svg)
 
