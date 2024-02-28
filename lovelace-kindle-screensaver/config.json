@@ -1,8 +1,8 @@
 {
-    "name": "Lovelace dashboard renderer for Inkplate6Color",
-    "version": "1.1.28",
-    "slug": "lovelace-dashboard-renderer",
-    "description": "Renders a lovelace dashboard to an image and hosts it for an inkplate6color to retrieve",
+    "name": "Lovelace dashboard snapshotter for Inkplate",
+    "version": "1.1.29",
+    "slug": "lovelace-dashboard-inkplate-snapshotter",
+    "description": "Snapshots lovelace dashboards to an Inkplate compatible image and hosts it for an Inkplate to retrieve",
     "url": "https://github.com/brodykenrick/hass-lovelace-screenshotter/tree/master/lovelace-kindle-screensaver",
     "webui": "http://[HOST]:[PORT:5006]",
     "image": "brodykenrick/addon-lovelace-kindle-screensaver-{arch}",
@@ -31,8 +31,13 @@
     "host_network": false,
     "options": {
       "ha_base_url": "",
-      "ha_screenshot_url": "/lovelace?kiosk",
       "ha_access_token": "",
+      "ha_screenshot_url_1": "/lovelace?kiosk",
+      "ha_screenshot_url_1_config": "inkplate6color",
+      
+      "urls":[
+        {"url": "/lovelace?kiosk", "config": "inkplate6color"}
+      ],
       "language": "en",
       "cron_job": "*/20 * * * *",
       "rendering_timeout": 30000,
@@ -46,8 +51,13 @@
     },
     "schema": {
       "ha_base_url": "str",
-      "ha_screenshot_url": "str",
       "ha_access_token": "str",
+      "ha_screenshot_url_1": "str",
+      "ha_screenshot_url_1_config": "list(inkplate10|inkplate6color)",
+      "urls":[{
+          "url": "str",
+          "config": "list(inkplate10|inkplate6color)"
+      }],
       "language": "str",
       "cron_job": "str",
       "rendering_timeout": "int",
