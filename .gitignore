@@ -3,9 +3,9 @@ node_modules/
 config.*.js
 docker-compose.*.yml
 cover.png
-output/
-.devcontainer/devcontainer.env
 cover.jpg
 cover.bmp
+output/
+.devcontainer/devcontainer.env
 output/
 .DS_Store

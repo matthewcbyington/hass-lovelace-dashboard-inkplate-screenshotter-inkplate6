@@ -33,21 +33,19 @@ All options are the same as original addon and are listed below:
 | Env Var                   | Sample value                          | Required | Array?\* | Description                                                                                                                                             |
 | ------------------------- | ------------------------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `ha_base_url`             | `https://your-hass-instance.com:8123` | yes      | no       | Base URL of your home assistant instance                                                                                                                |
-| `ha_screenshot_url`       | `/lovelace?kiosk`                     | no      | yes      | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
+| `ha_screenshot_url`       | `/lovelace?kiosk`                     | no       | yes      | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
 | `ha_access_token`         | `eyJ0...`                             | yes      | no       | Long-lived access token from Home Assistant, see [official docs](https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token)           |                                    |
 | `language`                | `en`                                  | no       | no       | Language to set in browser and home assistant                                                                                                           |
 | `cron_job`                | `* * * * *`                           | no       | no       | How often to take screenshot                                                                                                                            |
 | `rendering_timeout`       | `10000`                               | no       | no       | Timeout of render process, helpful if your HASS instance might be down                                                                                  |
 | `rendering_delay`         | `0`                                   | no       | yes      | how long to wait between navigating to the page and taking the screenshot, in milliseconds                                                              |
-| `rendering_screen_width` | `800`                                 | no       | yes      | Height of your inkplate screen resolution                                                                                                                 |
-| `rendering_screen_width`  | `600`                                 | no       | yes      | Width of your inkplate screen resolution                                                                                                                  |
+| `rendering_screen_height` | `600`                                 | no       | yes      | Height of your inkplate screen resolution                                                                                                                 |
+| `rendering_screen_width`  | `448`                                 | no       | yes      | Width of your inkplate screen resolution                                                                                                                  |
 | `rotation`                | `0`                                   | no       | yes      | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
 | `scaling`                 | `1`                                   | no       | yes      | Scaling factor, e.g. `1.5` to zoom in or `0.75` to zoom out                                                                                             |
-| `grayscale_depth`         | `8`                                   | no       | yes      | Ggrayscale bit depth your inkplate supports                                                                                                               |
-| `color_mode`              | `GrayScale`                           | no       | yes      | ColorMode to use, ex: `GrayScale`, or `TrueColor`.                                                                                                      |
-| `dither`                  | `false`                               | no       | yes      | Apply a dither to the images.                                                                                                                           |
 
-**\* Array** mode of original addon are **not currently supported**.
+
+**\* Array** mode of original addon are **not currently supported** (in this configuration code still supports it underneath).
 
 ### Advanced configuration
 

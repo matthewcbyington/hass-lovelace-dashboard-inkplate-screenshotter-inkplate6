@@ -37,14 +37,11 @@
       "cron_job": "*/20 * * * *",
       "rendering_timeout": 30000,
       "rendering_delay": 0,
-      "rendering_screen_height": 600,
-      "rendering_screen_width": 448,
+      "rendering_screen_height": 448,
+      "rendering_screen_width": 600,
       "image_format": "png",
       "rotation": 0,
       "scaling": 1.0,
-      "grayscale_depth": 8,
-      "color_mode": "TrueColor",
-      "dither": false,
       "log_level": "info"
     },
     "schema": {
@@ -60,9 +57,6 @@
       "image_format": "str",
       "rotation": "int",
       "scaling": "float",
-      "grayscale_depth": "int",
-      "color_mode": "str",
-      "dither": "bool",
       "log_level": "list(trace|debug|info|notice|warning|error|fatal)?"
     },
     "environment": {

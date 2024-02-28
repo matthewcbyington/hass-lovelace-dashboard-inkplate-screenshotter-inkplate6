@@ -6,7 +6,7 @@ const { promises: fs } = require("fs");
 const fsExtra = require("fs-extra");
 const puppeteer = require("puppeteer");
 const { CronJob } = require("cron");
-const gm = require("gm"); //ImageMagick - For manipulating the captured image
+const gm = require("gm"); //ImageMagick (not GraphicsMagick) - For manipulating the captured image
 
 
 (async () => {
@@ -156,14 +156,7 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
   try {
     page = await browser.newPage();
-    // await page.emulateMediaFeatures([
-    //   {
-    //     name: 'prefers-color-scheme',
-    //     value: 'light'
-    //   }
-    // ]);
-
-    let size = {
+      let size = {
       width: Number(pageConfig.renderingScreenSize.width),
       height: Number(pageConfig.renderingScreenSize.height)
     };
@@ -239,8 +232,8 @@ function convertImageToInkplate6ColorCompatiblePngAsync(
       })
       .rotate("white", pageConfig.rotation)
       .setFormat(config.imageFormat)
-      .type(pageConfig.colorMode)
-      .bitdepth(pageConfig.grayscaleDepth)
+      .type("TrueColor")
+      .bitdepth(8)
       .quality(100)
       .write(outputPath, (err) => {
         if (err) {
