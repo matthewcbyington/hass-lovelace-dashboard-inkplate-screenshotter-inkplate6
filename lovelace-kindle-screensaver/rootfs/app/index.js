@@ -6,11 +6,8 @@ const { promises: fs } = require("fs");
 const fsExtra = require("fs-extra");
 const puppeteer = require("puppeteer");
 const { CronJob } = require("cron");
-const gm = require("gm");
+const gm = require("gm"); //ImageMagick - For manipulating the captured image
 
-// keep state of current battery level and whether the device is charging
-//TODO: remove me
-const batteryStore = {};
 
 (async () => {
   if (config.pages.length === 0) {
@@ -25,7 +22,7 @@ const batteryStore = {};
     }
   }
 
-  console.log("Starting browser...");
+  console.log("Starting browser client to snapshot image...");
   let browser = await puppeteer.launch({
     args: [
       "--disable-dev-shm-usage",
@@ -81,10 +78,7 @@ const batteryStore = {};
     const url = new URL(request.url, `http://${request.headers.host}`);
     // Check the page number
     const pageNumberStr = url.pathname;
-    // and get the battery level, if any
-    // (see https://github.com/sibbl/hass-lovelace-kindle-screensaver/README.md for patch to generate it on Kindle)
-    const batteryLevel = parseInt(url.searchParams.get("batteryLevel"));
-    const isCharging = url.searchParams.get("isCharging");
+
     const pageNumber =
       pageNumberStr === "/" ? 1 : parseInt(pageNumberStr.substr(1));
     if (
@@ -117,32 +111,6 @@ const batteryStore = {};
       });
       response.end(data);
 
-      let pageBatteryStore = batteryStore[pageIndex];
-      if (!pageBatteryStore) {
-        pageBatteryStore = batteryStore[pageIndex] = {
-          batteryLevel: null,
-          isCharging: false
-        };
-      }
-      if (!isNaN(batteryLevel) && batteryLevel >= 0 && batteryLevel <= 100) {
-        if (batteryLevel !== pageBatteryStore.batteryLevel) {
-          pageBatteryStore.batteryLevel = batteryLevel;
-          console.log(
-            `New battery level: ${batteryLevel} for page ${pageNumber}`
-          );
-        }
-
-        if (isCharging === "Yes" && pageBatteryStore.isCharging !== true) {
-          pageBatteryStore.isCharging = true;
-          console.log(`Battery started charging for page ${pageNumber}`);
-        } else if (
-          isCharging === "No" &&
-          pageBatteryStore.isCharging !== false
-        ) {
-          console.log(`Battery stopped charging for page ${pageNumber}`);
-          pageBatteryStore.isCharging = false;
-        }
-      }
     } catch (e) {
       console.error(e);
       response.writeHead(404);
@@ -159,20 +127,19 @@ const batteryStore = {};
 async function renderAndConvertAsync(browser) {
   for (let pageIndex = 0; pageIndex < config.pages.length; pageIndex++) {
     const pageConfig = config.pages[pageIndex];
-    const pageBatteryStore = batteryStore[pageIndex];
 
     const url = `${config.baseUrl}${pageConfig.screenShotUrl}`;
 
     const outputPath = pageConfig.outputPath;
     await fsExtra.ensureDir(path.dirname(outputPath));
 
-    const tempPath = outputPath + ".temp";
+    const tempPath = outputPath + ".temp." + config.imageFormat;
 
-    console.log(`Rendering ${url} to image...`);
+    console.log(`Rendering ${url} to image at tempPath ${tempPath}...`);
     await renderUrlToImageAsync(browser, pageConfig, url, tempPath);
 
-    console.log(`Converting rendered screenshot of ${url} to requested parameters ${config.imageFormat}...`);
-    await convertImageToKindleCompatiblePngAsync(
+    console.log(`Converting rendered screenshot of ${url} to requested parameters ${config.imageFormat} at outputPath ${outputPath}...`);
+    await convertImageToInkplate6ColorCompatiblePngAsync(
       pageConfig,
       tempPath,
       outputPath
@@ -180,49 +147,10 @@ async function renderAndConvertAsync(browser) {
 
     fs.unlink(tempPath);
     console.log(`Finished ${url}`);
-
-    if (
-      pageBatteryStore &&
-      pageBatteryStore.batteryLevel !== null &&
-      pageConfig.batteryWebHook
-    ) {
-      sendBatteryLevelToHomeAssistant(
-        pageIndex,
-        pageBatteryStore,
-        pageConfig.batteryWebHook
-      );
-    }
   }
 }
 
-function sendBatteryLevelToHomeAssistant(
-  pageIndex,
-  batteryStore,
-  batteryWebHook
-) {
-  const batteryStatus = JSON.stringify(batteryStore);
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(batteryStatus)
-    }
-  };
-  const url = `${config.baseUrl}/api/webhook/${batteryWebHook}`;
-  const httpLib = url.toLowerCase().startsWith("https") ? https : http;
-  const req = httpLib.request(url, options, (res) => {
-    if (res.statusCode !== 200) {
-      console.error(
-        `Update device ${pageIndex} at ${url} status ${res.statusCode}: ${res.statusMessage}`
-      );
-    }
-  });
-  req.on("error", (e) => {
-    console.error(`Update ${pageIndex} at ${url} error: ${e.message}`);
-  });
-  req.write(batteryStatus);
-  req.end();
-}
+
 
 async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   let page;
@@ -299,7 +227,7 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   }
 }
 
-function convertImageToKindleCompatiblePngAsync(
+function convertImageToInkplate6ColorCompatiblePngAsync(
   pageConfig,
   inputPath,
   outputPath
@@ -309,7 +237,6 @@ function convertImageToKindleCompatiblePngAsync(
       .options({
         imageMagick: config.useImageMagick === true
       })
-      // .dither(pageConfig.dither)
       .rotate("white", pageConfig.rotation)
       .setFormat(config.imageFormat)
       .type(pageConfig.colorMode)

@@ -1,8 +1,8 @@
 {
-    "name": "Lovelace dashboard renderer",
-    "version": "1.1.25",
+    "name": "Lovelace dashboard renderer for Inkplate6Color",
+    "version": "1.1.28",
     "slug": "lovelace-dashboard-renderer",
-    "description": "Renders any lovelace dashboard to an image and hosts it",
+    "description": "Renders a lovelace dashboard to an image and hosts it for an inkplate6color to retrieve",
     "url": "https://github.com/brodykenrick/hass-lovelace-screenshotter/tree/master/lovelace-kindle-screensaver",
     "webui": "http://[HOST]:[PORT:5006]",
     "image": "brodykenrick/addon-lovelace-kindle-screensaver-{arch}",
@@ -19,7 +19,7 @@
       "5006/tcp": 5006
     },
     "ports_description": {
-      "5006/tcp": "Webserver that hosts the lovelace screenshot image"
+      "5006/tcp": "Webserver that hosts the lovelace screenshot image for the inkplate6color to retrieve"
     },
     "privileged": [
       "SYS_ADMIN","DAC_READ_SEARCH"
@@ -37,8 +37,8 @@
       "cron_job": "*/20 * * * *",
       "rendering_timeout": 30000,
       "rendering_delay": 0,
-      "rendering_screen_height": 1024,
-      "rendering_screen_width": 758,
+      "rendering_screen_height": 600,
+      "rendering_screen_width": 448,
       "image_format": "png",
       "rotation": 0,
       "scaling": 1.0,
