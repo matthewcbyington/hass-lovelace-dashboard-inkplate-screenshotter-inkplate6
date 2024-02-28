@@ -1,18 +1,18 @@
 # Changes
 
-This is fork to target this screenshotter for rendering to an Inkplate6color
+This is fork to target this screenshotter for rendering to an Inkplate6color and Inkplate10
 
 ---
 
 # Home Assistant Lovelace dashboard renderer for Inkplate6color
 
-![ci](https://github.com/brodykenrick/hass-lovelace-kindle-screensaver/actions/workflows/publish.yml/badge.svg)
+![ci](https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/actions/workflows/publish.yml/badge.svg)
 
 This tool can be used as Home Assistant addon to display a Lovelace view of your Home Assistant instance as an image. So it can be displayed on the eink panel, like Inkplate6color, or any screen connected to the network. It regularly takes a screenshot which can be polled.
 
 ## Sample image
 
-![Sample image](https://raw.githubusercontent.com/mbrodykenrickkocus/hass-lovelace-kindle-screensaver/main/assets/sample.png)
+![Sample image](https://raw.githubusercontent.com/brodykenrickkocus/hass-lovelace-dashboard-inkplate-screenshotter/main/assets/sample.png)
 
 ## Features
 
