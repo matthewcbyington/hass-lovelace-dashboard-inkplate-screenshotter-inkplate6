@@ -40,13 +40,13 @@ ARG BUILD_VERSION
 
 # Labels
 LABEL \
-    io.hass.name="Lovelace Inkplate Screensaver" \
+    io.hass.name="Lovelace Inkplate Screenshotter" \
     io.hass.description="Display a lovelace page on an InkplateColor (Inkplate 6 Color)" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
     maintainer="Marcin Kocon <mkocon@gmail.com>" \
-    org.opencontainers.image.title="Lovelace Inkplate Screensaver" \
+    org.opencontainers.image.title="Lovelace Inkplate Screenshotter" \
     org.opencontainers.image.description="Display a lovelace page on a InkplateColor" \
     org.opencontainers.image.vendor="Brody Kenrick" \
     org.opencontainers.image.authors="Brody Kenrick <BrodyKenrick@gmail.com>" \

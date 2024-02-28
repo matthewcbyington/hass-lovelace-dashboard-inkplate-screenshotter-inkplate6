@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: hadolint
-        run: docker run --rm -i hadolint/hadolint < lovelace-kindle-screensaver/Dockerfile
+        run: docker run --rm -i hadolint/hadolint < lovelace-dashboard-inkplate-screenshotter/Dockerfile
   build-amd64:
     name: Build amd64 image
     runs-on: ubuntu-latest
@@ -20,11 +20,11 @@ jobs:
         uses: onlyutkarsh/patch-files-action@v1.0.1
         with:
           files: |
-            lovelace-kindle-screensaver/config.json
+            lovelace-dashboard-inkplate-screenshotter/config.json
           patch-syntax: |
             = /version => "${{ github.run_number }}"
       - name: build amd64 image
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-kindle-screensaver --amd64 --test
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-dashboard-inkplate-screenshotter --amd64 --test
   build-armv7:
     name: Build armv7 image
     runs-on: ubuntu-latest
@@ -35,11 +35,11 @@ jobs:
         uses: onlyutkarsh/patch-files-action@v1.0.1
         with:
           files: |
-            lovelace-kindle-screensaver/config.json
+            lovelace-dashboard-inkplate-screenshotter/config.json
           patch-syntax: |
             = /version => "${{ github.run_number }}"
       - name: build armv7 image
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-kindle-screensaver --armv7 --test
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-dashboard-inkplate-screenshotter --armv7 --test
   build-aarch64:
     name: Build aarch64 image
     runs-on: ubuntu-latest
@@ -50,8 +50,8 @@ jobs:
         uses: onlyutkarsh/patch-files-action@v1.0.1
         with:
           files: |
-            lovelace-kindle-screensaver/config.json
+            lovelace-dashboard-inkplate-screenshotter/config.json
           patch-syntax: |
             = /version => "${{ github.run_number }}"
       - name: build aarch64 image
-        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-kindle-screensaver --aarch64 --test
+        run: docker run --rm --privileged -v /var/run/docker.sock:/var/run/docker.sock -v ~/.docker:/root/.docker -v "$(pwd)":/data homeassistant/amd64-builder -t lovelace-dashboard-inkplate-screenshotter --aarch64 --test

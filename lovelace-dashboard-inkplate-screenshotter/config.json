@@ -3,9 +3,9 @@
     "version": "1.2.0",
     "slug": "lovelace-dashboard-inkplate-screenshotter",
     "description": "Snapshots lovelace dashboards to an Inkplate compatible image and hosts it for an Inkplate to retrieve",
-    "url": "https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/tree/master/lovelace-kindle-screensaver",
+    "url": "https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/tree/master/lovelace-dashboard-inkplate-screenshotter",
     "webui": "http://[HOST]:[PORT:5006]",
-    "image": "brodykenrick/addon-lovelace-kindle-screensaver-{arch}",
+    "image": "brodykenrick/addon-lovelace-dashboard-inkplate-screenshotter-{arch}",
     "startup": "application",
     "arch": ["armv7", "aarch64", "amd64"],
     "map": [
