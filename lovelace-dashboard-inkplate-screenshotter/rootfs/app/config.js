@@ -4,7 +4,9 @@ function getPagesConfig() {
   const pages = [];
 
   const pagesEnv = process.env[`PAGES`];
-  const validJsonPages = "[" + pagesEnv.replaceAll("\n",",") + "]"
+  //const validJsonPages = "[" + pagesEnv.replaceAll("\n",",") + "]"
+  const validJsonPages = "[" + pagesEnv.replace(/\n/g,",") + "]"
+
   console.log(`Pages... '${validJsonPages}'...`);
 
   jsonPages = JSON.parse( validJsonPages );

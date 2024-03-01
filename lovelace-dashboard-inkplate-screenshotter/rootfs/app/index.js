@@ -78,7 +78,8 @@ const gm = require("gm"); //ImageMagick (not GraphicsMagick) - For manipulating 
     const url = new URL(request.url, `http://${request.headers.host}`);
 
     // Get the filename -- Drop suffix/extension and drop leading /
-    const imageNameNoExtension = url.pathname.replaceAll("/","").replaceAll(".png","");
+    //const imageNameNoExtension = url.pathname.replaceAll("/","").replaceAll(".png","");
+    const imageNameNoExtension = url.pathname.replace(/\//g,"").replace(/.png/g,"");
     console.log(`imageNameNoExtension: ${imageNameNoExtension}`);
 
 

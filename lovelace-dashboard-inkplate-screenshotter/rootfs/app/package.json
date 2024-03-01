@@ -1,6 +1,6 @@
 {
   "name": "hass-lovelace-dashboard-inkplate-screenshotter",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Renders a lovelace dashboard to image for an inkplate and hosts it",
   "main": "index.js",
   "scripts": {

@@ -4,7 +4,7 @@ This is fork to target this screenshotter for rendering to an Inkplate6color and
 
 ---
 
-# Home Assistant Lovelace dashboard renderer for Inkplate6color
+# Home Assistant Lovelace dashboard renderer for Inkplate
 
 ![ci](https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/actions/workflows/publish.yml/badge.svg)
 
@@ -26,26 +26,28 @@ After instaling go to the addon config and (minimally) setup two options:
 - ha_base_url - base url of your home assistant instance (http://192.168.0.2:8123 for example)
 - ha_access_token - go to your user profile and the bottom you will have an option to generate access token. Paste it there.
 
-You can access the image by doing a simple GET request to e.g. `http://localhost:5006/` to receive the most recent image.
+You can access the image by doing a simple GET request to e.g. `http://localhost:5006/` to receive the most recent image for page 1. you can also request to `http://localhost:5006/1.png` or `http://localhost:5006/2.png` or `http://localhost:5006/name.png`
 
-All options are the same as original addon and are listed below:
+General options as below:
 
-| Env Var                   | Sample value                          | Required | Array?\* | Description                                                                                                                                             |
-| ------------------------- | ------------------------------------- | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ha_base_url`             | `https://your-hass-instance.com:8123` | yes      | no       | Base URL of your home assistant instance                                                                                                                |
-| `ha_screenshot_url`       | `/lovelace?kiosk`                     | no       | yes      | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
-| `ha_access_token`         | `eyJ0...`                             | yes      | no       | Long-lived access token from Home Assistant, see [official docs](https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token)           |                                    |
-| `language`                | `en`                                  | no       | no       | Language to set in browser and home assistant                                                                                                           |
-| `cron_job`                | `* * * * *`                           | no       | no       | How often to take screenshot                                                                                                                            |
-| `rendering_timeout`       | `10000`                               | no       | no       | Timeout of render process, helpful if your HASS instance might be down                                                                                  |
-| `rendering_delay`         | `0`                                   | no       | yes      | how long to wait between navigating to the page and taking the screenshot, in milliseconds                                                              |
-| `rendering_screen_height` | `600`                                 | no       | yes      | Height of your inkplate screen resolution                                                                                                                 |
-| `rendering_screen_width`  | `448`                                 | no       | yes      | Width of your inkplate screen resolution                                                                                                                  |
-| `rotation`                | `0`                                   | no       | yes      | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
-| `scaling`                 | `1`                                   | no       | yes      | Scaling factor, e.g. `1.5` to zoom in or `0.75` to zoom out                                                                                             |
+| Option                    | Sample value                          | Description                                                                                                                                             |
+| ------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ha_base_url`             | `https://your-hass-instance.com:8123` | Base URL of your home assistant instance                                                                                                                |
+| `ha_access_token`         | `eyJ0...`                             | Long-lived access token from Home Assistant, see [official docs](https://developers.home-assistant.io/docs/auth_api/#long-lived-access-token)           |
+| `language`                | `en`                                  | Language to set in browser and home assistant                                                                                                           |
+| `cron_job`                | `* * * * *`                           | How often to take screenshot                                                                                                                            |
+| `rendering_timeout`       | `10000`                               | Timeout of render process, helpful if your HASS instance might be down                                                                                  |
+| `rendering_delay`         | `0`                                   | how long to wait between navigating to the page and taking the screenshot, in milliseconds                                                              |
+| `log_level`               | `info`                                | Log at level                                                                                                                                            |
 
+Pages (one or more) options as below:
 
-**\* Array** mode of original addon are **not currently supported** (in this configuration code still supports it underneath).
+| Option                    | Sample value                          | Description                                                                                                                                             |
+| ------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `path`                    | `/lovelace?kiosk`                     | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
+| `name`                    | `weather_inkplate6color`              | name that will be used for accessing this page from teh webserver                                                                                       |
+| `config`                  | `inkplate6color`                      | Config setting by identifying the type of the inkplate inkplate6color or inkplate10                                                                     |
+| `rotation`                | `0`                                   | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
 
 ### Advanced configuration
 
