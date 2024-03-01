@@ -12,7 +12,7 @@ This tool can be used as Home Assistant addon to display a Lovelace view of your
 
 ## Sample image
 
-![Sample image](https://raw.githubusercontent.com/brodykenrickkocus/hass-lovelace-dashboard-inkplate-screenshotter/main/assets/sample.png)
+![Sample image](https://raw.githubusercontent.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/main/assets/sample.png)
 
 ## Features
 
