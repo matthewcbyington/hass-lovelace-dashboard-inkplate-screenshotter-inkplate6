@@ -76,11 +76,27 @@ const gm = require("gm"); //ImageMagick (not GraphicsMagick) - For manipulating 
   const httpServer = http.createServer(async (request, response) => {
     // Parse the request
     const url = new URL(request.url, `http://${request.headers.host}`);
-    // Check the page number
-    const pageNumberStr = url.pathname;
 
-    const pageNumber =
-      pageNumberStr === "/" ? 1 : parseInt(pageNumberStr.substr(1));
+    // Get the filename -- Drop suffix/extension and drop leading /
+    const imageNameNoExtension = url.pathname.replaceAll("/","").replaceAll(".png","");
+    console.log(`imageNameNoExtension: ${imageNameNoExtension}`);
+
+
+    //Allow access as 1.png or 2.png (or 3.bmp for that matter)
+    //Default to the 1 if no path supplied
+    let pageNumber =
+      imageNameNoExtension === "" ? 1 : parseInt( imageNameNoExtension );
+    //Also (if not a number), lookup the filename as whatever is configured for the URL's name. E.g. "inkplate10_image_a".png
+    if (
+      isFinite(pageNumber) === false ||
+      pageNumber > config.pages.length ||
+      pageNumber < 1
+    ) {
+        //Get the page/URL index of where that name is found in config.pages.name
+        pageNumber = config.pages.findIndex(item => item['name'] === imageNameNoExtension);
+        //console.log(`pageNumber found at index: ${pageNumber}`);
+    }
+
     if (
       isFinite(pageNumber) === false ||
       pageNumber > config.pages.length ||
@@ -94,10 +110,11 @@ const gm = require("gm"); //ImageMagick (not GraphicsMagick) - For manipulating 
     try {
       // Log when the page was accessed
       const n = new Date();
-      console.log(`${n.toISOString()}: Image ${pageNumber} was accessed`);
 
       const pageIndex = pageNumber - 1;
       const configPage = config.pages[pageIndex];
+
+      console.log(`${n.toISOString()}: Image ${pageNumber} was accessed - ${configPage.name}`);
 
       const data = await fs.readFile(configPage.outputPath);
       const stat = await fs.stat(configPage.outputPath);
@@ -105,7 +122,7 @@ const gm = require("gm"); //ImageMagick (not GraphicsMagick) - For manipulating 
       const lastModifiedTime = new Date(stat.mtime).toUTCString();
 
       response.writeHead(200, {
-        "Content-Type": `image/${config.imageFormat}`,
+        "Content-Type": `image/png`,
         "Content-Length": Buffer.byteLength(data),
         "Last-Modified": lastModifiedTime
       });
@@ -133,13 +150,13 @@ async function renderAndConvertAsync(browser) {
     const outputPath = pageConfig.outputPath;
     await fsExtra.ensureDir(path.dirname(outputPath));
 
-    const tempPath = outputPath + ".temp." + config.imageFormat;
+    const tempPath = outputPath + ".temp." + "png";
 
     console.log(`Rendering ${url} to image at tempPath ${tempPath}...`);
     await renderUrlToImageAsync(browser, pageConfig, url, tempPath);
 
-    console.log(`Converting rendered screenshot of ${url} to requested parameters ${config.imageFormat} at outputPath ${outputPath}...`);
-    await convertImageToInkplate6ColorCompatiblePngAsync(
+    console.log(`Converting rendered screenshot of ${url} to png at outputPath ${outputPath}...`);
+    await convertImageToInkplateCompatiblePngAsync(
       pageConfig,
       tempPath,
       outputPath
@@ -220,7 +237,7 @@ async function renderUrlToImageAsync(browser, pageConfig, url, path) {
   }
 }
 
-function convertImageToInkplate6ColorCompatiblePngAsync(
+function convertImageToInkplateCompatiblePngAsync(
   pageConfig,
   inputPath,
   outputPath
@@ -231,7 +248,7 @@ function convertImageToInkplate6ColorCompatiblePngAsync(
         imageMagick: config.useImageMagick === true
       })
       .rotate("white", pageConfig.rotation)
-      .setFormat(config.imageFormat)
+      .setFormat("png")
       .type("TrueColor")
       .bitdepth(8)
       .quality(100)

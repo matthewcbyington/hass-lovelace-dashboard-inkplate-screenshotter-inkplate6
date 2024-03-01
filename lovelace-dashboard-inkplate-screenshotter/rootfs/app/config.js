@@ -1,34 +1,51 @@
-function getEnvironmentVariable(key, suffix, fallbackValue) {
-  const value = process.env[key + suffix];
-  if (value !== undefined) return value;
-  return fallbackValue || process.env[key];
-}
+
 
 function getPagesConfig() {
   const pages = [];
-  let i = 0;
-  while (++i) {
-    const suffix = i === 1 ? "" : `_${i}`;
-    const screenShotUrl = process.env[`HA_SCREENSHOT_URL${suffix}`];
-    if (!screenShotUrl) return pages;
+
+  const pagesEnv = process.env[`PAGES`];
+  const validJsonPages = "[" + pagesEnv.replaceAll("\n",",") + "]"
+  console.log(`Pages... '${validJsonPages}'...`);
+
+  jsonPages = JSON.parse( validJsonPages );
+
+
+  for(let i = 0; i < jsonPages.length; i++) {
+    let obj = jsonPages[i];
+
+    const screenShotUrl = obj.path;
+    const name = obj.name;
+    const rotation = obj.rotation;
+    const config = obj.config;
+
+    let height = -1;
+    let width = -1;
+    switch(config) {
+      case "inkplate6color":
+        height = 448;
+        width = 600;
+        break;
+      case "inkplate10":
+        height = 1024
+        width = 758;
+        break;
+      default:
+        break;
+    }
+
     pages.push({
-      screenShotUrl,
-      outputPath: getEnvironmentVariable(
-        "OUTPUT_PATH",
-        suffix,
-        `output/cover${suffix}.${process.env.IMAGE_FORMAT || "png"}`
-      ),
-      renderingDelay: getEnvironmentVariable("RENDERING_DELAY", suffix) || 0,
+      screenShotUrl: screenShotUrl,
+      name: name,
+      outputPath: `output/${name}.png`,
+      renderingDelay: process.env.RENDERING_DELAY,
       renderingScreenSize: {
-        height:
-          getEnvironmentVariable("RENDERING_SCREEN_HEIGHT", suffix) || 448,
-        width:
-          getEnvironmentVariable("RENDERING_SCREEN_WIDTH", suffix) || 600,
+        height: height,
+        width: width,
       },
-      rotation: getEnvironmentVariable("ROTATION", suffix) || 0,
-      scaling: getEnvironmentVariable("SCALING", suffix) || 1,
+      rotation: rotation,
     });
   }
+
   return pages;
 }
 
@@ -40,7 +57,6 @@ module.exports = {
   pages: getPagesConfig(),
   port: process.env.PORT || 5006,
   renderingTimeout: process.env.RENDERING_TIMEOUT || 10000,
-  imageFormat: process.env.IMAGE_FORMAT || "png",
   language: process.env.LANGUAGE || "en",
   debug: process.env.DEBUG === "true",
   ignoreCertificateErrors:

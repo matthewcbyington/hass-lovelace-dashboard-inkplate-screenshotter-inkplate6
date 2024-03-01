@@ -6,23 +6,14 @@ bashio::log.info "Starting Node server..."
 
 export HA_BASE_URL="$(bashio::config 'ha_base_url')"
 export HA_ACCESS_TOKEN="$(bashio::config 'ha_access_token')"
-export HA_SCREENSHOT_URL=$(bashio::config 'ha_screenshot_url')
-export HA_SCREENSHOT_URL_CONFIG=$(bashio::config 'ha_screenshot_url_config')
-export URLS=$(bashio::config 'urls')
+export PAGES=$(bashio::config 'pages')
 export LANGUAGE=$(bashio::config 'language')
 export CRON_JOB=$(bashio::config 'cron_job')
 export RENDERING_TIMEOUT=$(bashio::config 'rendering_timeout')
 export RENDERING_DELAY=$(bashio::config 'rendering_delay')
-export RENDERING_SCREEN_HEIGHT=$(bashio::config 'rendering_screen_height')
-export RENDERING_SCREEN_WIDTH=$(bashio::config 'rendering_screen_width')
-export IMAGE_FORMAT=$(bashio::config 'image_format')
-export ROTATION=$(bashio::config 'rotation')
-export SCALING=$(bashio::config 'scaling')
-
 
 bashio::log.info "Using base_url: ${HA_BASE_URL}"
-
-bashio::log.info "URLs from the list: ${URLS}"
+bashio::log.info "Pages from the list: ${PAGES}"
 
 cd /app
 exec /usr/bin/npm start
