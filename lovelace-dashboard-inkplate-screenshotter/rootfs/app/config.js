@@ -4,7 +4,7 @@ function getPagesConfig() {
   const pages = [];
 
   const pagesEnv = process.env[`PAGES`];
-  //const validJsonPages = "[" + pagesEnv.replaceAll("\n",",") + "]"
+  //Regex is eqivalent to replaceAll
   const validJsonPages = "[" + pagesEnv.replace(/\n/g,",") + "]"
 
   console.log(`Pages... '${validJsonPages}'...`);
@@ -31,6 +31,10 @@ function getPagesConfig() {
         height = 1024
         width = 758;
         break;
+        case "inkplate2":
+          height = 104
+          width = 212;
+          break;
       default:
         break;
     }

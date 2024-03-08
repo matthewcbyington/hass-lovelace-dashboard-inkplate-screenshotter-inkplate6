@@ -1,6 +1,6 @@
 {
     "name": "Lovelace dashboard screenshotter for Inkplate",
-    "version": "1.2.4",
+    "version": "1.2.5",
     "slug": "lovelace-dashboard-inkplate-screenshotter",
     "description": "Snapshots lovelace dashboards to an Inkplate compatible image and hosts it for an Inkplate to retrieve",
     "url": "https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/tree/master/lovelace-dashboard-inkplate-screenshotter",
@@ -48,7 +48,7 @@
       "pages":[{
           "path": "str",
           "name": "str",
-          "config": "list(inkplate10|inkplate6color)",
+          "config": "list(inkplate10|inkplate6color|inkplate2)",
           "rotation": "int"
       }],
       "language": "str",

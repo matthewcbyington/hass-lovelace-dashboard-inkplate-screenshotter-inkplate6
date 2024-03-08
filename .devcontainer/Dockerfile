@@ -9,7 +9,7 @@
 ARG VARIANT="focal"
 FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 
-# ** [Optional] Uncomment this section to install additional packages. **
+# ** Install additional packages. **
 #
 RUN apt-get update \
      && export DEBIAN_FRONTEND=noninteractive \
@@ -52,9 +52,8 @@ RUN apt-get update \
     wget xdg-utils \
     libxshmfence1 \
     libglu1 \
-    #graphicsmagick \
-    imagemagick
-    
+    imagemagick 
+#Note not graphicsmagick ^^
 
 ARG HADOLINT_VERSION=v1.17.6
 RUN wget -O /usr/local/bin/hadolint https://github.com/hadolint/hadolint/releases/download/${HADOLINT_VERSION}/hadolint-Linux-x86_64 \

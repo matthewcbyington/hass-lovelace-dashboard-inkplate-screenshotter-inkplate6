@@ -1,6 +1,6 @@
 # Changes
 
-This is fork to target this screenshotter for rendering to an Inkplate6color and Inkplate10
+This is fork to target this screenshotter for rendering to an Inkplate6color, Inkplate2 and Inkplate10
 
 ---
 
@@ -44,11 +44,22 @@ Pages (one or more) options as below:
 
 | Option                    | Sample value                          | Description                                                                                                                                             |
 | ------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `path`                    | `/lovelace?kiosk`                     | Relative URL to take screenshot of (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
-| `name`                    | `weather_inkplate6color`              | name that will be used for accessing this page from teh webserver                                                                                       |
-| `config`                  | `inkplate6color`                      | Config setting by identifying the type of the inkplate inkplate6color or inkplate10                                                                     |
-| `rotation`                | `0`                                   | Rotation of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
+| `path`                    | `/lovelace?kiosk`                     | The relative `path` for a URL to take screenshot of on HA (btw, the `?kiosk` parameter hides the nav bar using the [kiosk mode](https://github.com/maykar/kiosk-mode) project) |
+| `name`                    | `weather_inkplate6color`              | The `name` will be used for accessing this page from the webserver                                                                                       |
+| `config`                  | `inkplate6color`                      | The `config` identifying the type of the Inkplate: inkplate6color, inkplate2 or inkplate10                                                                     |
+| `rotation`                | `0`                                   | The `rotation` of image in degrees, e.g. use 90 or 270 to render in landscape                                                                                 |
 
 ### Advanced configuration
 
 You can change the port used by the addon using the configuration screen.
+
+### Developing
+Use the devcontainer.
+
+Create a devcontainer.env with the following contents:
+
+HA_BASE_URL=<<Your HA URL>>
+HA_ACCESS_TOKEN=<<Your HA token long-lived>>
+USE_IMAGE_MAGICK=true
+
+Also chane the values in launch.json (particularly the pages)
