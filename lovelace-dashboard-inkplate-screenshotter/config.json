@@ -1,6 +1,6 @@
 {
     "name": "Lovelace dashboard screenshotter for Inkplate",
-    "version": "1.2.5",
+    "version": "1.2.6",
     "slug": "lovelace-dashboard-inkplate-screenshotter",
     "description": "Snapshots lovelace dashboards to an Inkplate compatible image and hosts it for an Inkplate to retrieve",
     "url": "https://github.com/brodykenrick/hass-lovelace-dashboard-inkplate-screenshotter/tree/master/lovelace-dashboard-inkplate-screenshotter",
