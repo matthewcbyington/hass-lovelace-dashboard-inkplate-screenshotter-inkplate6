@@ -5,7 +5,6 @@
     "description": "Snapshots lovelace dashboards to an Inkplate compatible image and hosts it for an Inkplate to retrieve",
     "url": "https://github.com/matthewcbyington/hass-lovelace-dashboard-inkplate-screenshotter-inkplate6/tree/master/lovelace-dashboard-inkplate-screenshotter",
     "webui": "http://[HOST]:[PORT:5006]",
-    "image": "matthewcbyington/addon-lovelace-dashboard-inkplate-screenshotter-{arch}",
     "startup": "application",
     "arch": ["armv7", "aarch64", "amd64"],
     "map": [
