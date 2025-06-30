@@ -31,9 +31,13 @@ function getPagesConfig() {
         height = 758
         width = 1024;
         break;
-        case "inkplate2":
+      case "inkplate2":
           height = 104
           width = 212;
+          break;
+      case "inkplate2":
+          height = 600
+          width = 800;
           break;
       default:
         break;
