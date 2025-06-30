@@ -48,7 +48,7 @@
       "pages":[{
           "path": "str",
           "name": "str",
-          "config": "list(inkplate10|inkplate6color|inkplate2)",
+          "config": "list(inkplate10|inkplate6color|inkplate2|inkplate6)",
           "rotation": "int"
       }],
       "language": "str",
